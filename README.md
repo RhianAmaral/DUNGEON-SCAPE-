@@ -1,4 +1,4 @@
-# DUNGEON SCAPE
+# ESCAPE DA MASMORRA
 
 **Integrantes**
 
@@ -20,13 +20,13 @@ O projeto tem como objetivo aplicar conceitos de lógica de programação na con
 
 ## Funcionalidades
 
-- [ ] Menu inicial interativo
-- [ ] Sistema de exploração de salas
-- [ ] Escolhas com consequências
-- [ ] Sistema de inventário
-- [ ] Itens e chaves
-- [ ] Sistema de combate
-- [ ] Condições de vitória e derrota
+* Menu inicial interativo
+* Sistema de exploração de salas
+* Escolhas com consequências
+* Sistema de inventário
+* Itens e chaves
+* Sistema de combate
+* Condições de vitória e derrota
 
 *As funcionalidades serão marcadas conforme forem implementadas e testadas.*
 
@@ -48,13 +48,13 @@ O projeto tem como objetivo aplicar conceitos de lógica de programação na con
 1. Clone o repositório:
 
    ```bash
-   git clone URL_DO_SEU_REPOSITORIO
+    git clone https://github.com/RhianAmaral/DUNGEON-SCAPE-.git
    ```
 
 2. Entre na pasta do projeto:
 
    ```bash
-   cd escape-da-masmorra
+   cd DUNGEON-SCAPE-
    ```
 
 3. Execute o jogo:
