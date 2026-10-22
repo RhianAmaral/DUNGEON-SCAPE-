@@ -1,7 +1,10 @@
 import random
+import json
 from dataclasses import dataclass
 from time import sleep
+import os
 
+# deveria ser uma classe
 #Armazena os nomes de usuário e suas respectivas senhas.
 contas = {}
 
@@ -14,6 +17,7 @@ tick = 0
 # Itens coletados durante a partida.
 inventario: list["Item"] = []
 
+ARQUIVO_SAVE = "./dungeon_scape.save"
 
 @dataclass
 class Inimigo:
@@ -32,7 +36,39 @@ class Item:
     dfs: float
     interacoes: tuple[str, ...] = ("pegar", "descartar")
 
+# fazer ele salvar o iventario do jogador, tick atual, e informacoes da conta
+def salvar_jogo(tick, inventario, contas):
+    dados = [tick, inventario, contas]
 
+    with open(ARQUIVO_SAVE, "w", encoding="utf-8") as arquivo:
+        json.dump(dados, arquivo)
+
+def carregar_jogo():
+
+    # tente carrgar o jogo, caso haja uma exception de arquivo nao encontrado no runtime
+    # retorne none, 
+    try:
+        with open(ARQUIVO_SAVE, "r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        # se o arquivo nao tem todos os dados esperados, retorne none
+        if not isinstance(dados, list) or len(dados) != 3:
+            return None
+
+        return dados[0], dados[1], dados[2]
+
+    except FileNotFoundError:
+        # sem save
+        return None
+    except json.JSONDecodeError:
+
+        # se n e json valido retorne none
+        return None
+
+ 
+
+
+        
 def ler_opcao(mensagem: str, minimo: int, maximo: int) -> int:
     """Lê uma opção numérica e repete a pergunta se ela for inválida."""
     while True:
@@ -46,17 +82,25 @@ def ler_opcao(mensagem: str, minimo: int, maximo: int) -> int:
         print(f"Digite um número entre {minimo} e {maximo}.")
 
 
-def mostrar_menu() -> None:
+def mostrar_menu_signin() -> None:
+    """Exibe o menu principal do jogo quando o jogador n criou a conta ainda."""
+    print("\n" + "=" * 30)
+    print("Escape da Masmorra")
+    print("=" * 30)
+    print("1 - Cadastro")
+    print("2 - Login")
+    print("3 - Sair")
+
+
+def mostrar_menu_principal() -> None:
+
     """Exibe o menu principal do jogo."""
     print("\n" + "=" * 30)
     print("Escape da Masmorra")
     print("=" * 30)
-    print("1 - Iniciar jogo")
-    print("2 - Cadastro")
-    print("3 - Login")
-    print("4 - Instruções")
-    print("5 - Sair")
-
+    print("1 - Iniciar Jogo")
+    print("2 - Logout")
+    print("3  - Sair")
 
 def spawnar_inimigo(dificuldade: int) -> Inimigo:
     """Cria um inimigo de acordo com a dificuldade atual."""
@@ -226,8 +270,6 @@ def cadastro():
 
 def login():
     """Realiza o login na conta do jogador."""
-
-    # Alteração: permite modificar a variável global.
     global logado
 
     print("\n" + "=" * 30)
@@ -239,12 +281,17 @@ def login():
 
     if usuario in contas and contas[usuario] == senha:
         print(f"\nBem-vindo ao Dungeon Scape, {usuario}!")
-        logado = True  # Alteração: registra o login bem-sucedido.
+        logado = True
     else:
         print("Usuário ou senha incorretos!")
-        logado = False  # Alteração: bloqueia o jogo após login inválido.
+        logado = False
 
-    sleep(1)
+def logout() -> None:
+    global logado, tick, inventario
+
+    logado = False
+    tick = 0
+    inventario = []
 
 
 def instrucoes() -> None:
@@ -254,26 +301,66 @@ def instrucoes() -> None:
     )
 
 
-def main() -> None:
-    """Mantém o menu principal ativo até o jogador sair."""
-    while True:
-        mostrar_menu()
-        opcao = input("Escolha uma opção: ")
+def lidar_com_sigin_login():
+    while not logado:
+        mostrar_menu_signin()
 
-        if opcao == "1":
-            iniciar_jogo()
-        elif opcao == "2":
+        try:
+            input_plyr = int(input("Escolha uma opção: "))
+        except ValueError:
+            print("Digite um número válido.")
+            continue
+
+        if input_plyr == 1:
             cadastro()
-        elif opcao == "3":
+        elif input_plyr == 2:
             login()
-        elif opcao == "4":
-            instrucoes()
-        elif opcao == "5":
-            print("Saindo do jogo...")
-            break
+        elif input_plyr == 3:
+            print("Salvando e saindo do jogo...")
+            salvar_jogo(tick, inventario, contas)
+            return False
         else:
             print("Opção inválida! Tente novamente.")
 
+    return True
+
+
+def main() -> None:
+    global tick, inventario, contas
+
+    dados = carregar_jogo()
+
+    if dados is None:
+        tick = 0
+        inventario = []
+        contas = {}
+    else:
+        tick, inventario, contas = dados
+
+    while True:
+        # requer um login novo dps do jogo inicar
+        if not lidar_com_sigin_login():
+            return
+
+        while logado:
+            mostrar_menu_principal()
+
+            try:
+                input_plyr = int(input("Escolha uma opção: "))
+            except ValueError:
+                print("Digite um número válido.")
+                continue
+
+            if input_plyr == 1:
+                iniciar_jogo()
+            elif input_plyr == 2:
+                logout()
+            elif input_plyr == 3:
+                print("Salvando e saindo do jogo...")
+                salvar_jogo(tick, inventario, contas)
+                return
+            else:
+                print("Opção inválida! Tente novamente.")
 
 # Executa o jogo quando este arquivo é iniciado diretamente.
 if __name__ == "__main__":
