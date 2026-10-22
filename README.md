@@ -72,12 +72,14 @@ A estrutura será atualizada conforme novos módulos e funcionalidades forem adi
 
 Durante o desenvolvimento, serão explorados conceitos como:
 
-- Variáveis e tipos de dados.
-- Estruturas condicionais.
-- Estruturas de repetição.
-- Listas e manipulação de dados.
-- Funções e modularização.
- Tratamento de entradas e erros.
+* Variáveis e tipos de dados.
+* Estruturas condicionais.
+* Estruturas de repetição.
+* Listas e manipulação de dados.
+* Funções e modularização.
+* Tratamento de entradas e erros.
+* Classes e POO.
+* Json, leitura e escrita de arquivos.
 
 
 ---
