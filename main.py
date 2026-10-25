@@ -7,6 +7,7 @@ from components.menus import mostrar_menu_principal, mostrar_menu_signin
 from components.persistencia import carregar_jogo, salvar_jogo
 
 
+
 def lidar_com_signin_login(estado: Estado) -> bool:
     """Mostra o menu de cadastro/login até o jogador entrar ou sair.
 
@@ -63,11 +64,8 @@ def menu_principal(estado: Estado) -> bool:
     return True
 
 
-def main() -> None:
-    estado = carregar_jogo()
-    if estado is None:
-        estado = Estado()
-
+def menu_em_texto(estado: Estado) -> None:
+    """Menu antigo, no terminal (usado se a janela não puder ser aberta)."""
     while True:
         # Requer um login novo depois que o jogo inicia.
         if not lidar_com_signin_login(estado):
@@ -75,6 +73,34 @@ def main() -> None:
 
         if not menu_principal(estado):
             return
+
+
+def abrir_janela_inicial(estado: Estado) -> bool:
+    """Abre a janela inicial e retorna True quando o jogador a encerra.
+
+    Retorna False se não foi possível abrir a janela (por exemplo, sem
+    tkinter instalado ou sem ambiente gráfico).
+    """
+    try:
+        from components.tela_inicial import JanelaInicial
+
+        janela = JanelaInicial(estado)
+    except Exception as erro:
+        print(f"Não foi possível abrir a janela inicial ({erro}).")
+        print("Usando o menu em texto.")
+        return False
+
+    janela.executar()
+    return True
+
+
+def main() -> None:
+    estado = carregar_jogo()
+    if estado is None:
+        estado = Estado()
+
+    if not abrir_janela_inicial(estado):
+        menu_em_texto(estado)
 
 
 # Executa o jogo quando este arquivo é iniciado diretamente.

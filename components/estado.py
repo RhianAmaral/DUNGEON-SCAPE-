@@ -12,6 +12,8 @@ class Estado:
     contas: dict[str, str] = field(default_factory=dict)
     # Controla se o jogador está conectado.
     logado: bool = False
+    # Nome do jogador conectado (vazio quando ninguém está logado).
+    usuario: str = ""
     # Contador de eventos, usado para calcular a dificuldade.
     tick: int = 0
     # Itens coletados durante a partida.

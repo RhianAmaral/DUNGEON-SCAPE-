@@ -2,8 +2,8 @@
 
 **Integrantes**
 
-* Mathues Lima Barbosa
-* Gustavo Chagas Neri
+* Matheus Lima Barbosa
+* Gustavo Chaves Neri Ferreira
 * Rhian Amaral Dionisio da Silva
 * Romulo Batista Costa santos
 * Richarlyson Vilar Dos Santos
@@ -41,6 +41,7 @@ O projeto tem como objetivo aplicar conceitos de lógica de programação na con
 ### Pré-requisitos
 
 - Python 3 instalado.
+- Tkinter (já vem com o Python no Windows e no macOS; no Linux, instale o pacote `python3-tk`). Sem ele, o jogo abre o menu em texto.
 - Git instalado, caso queira clonar o repositório.
 
 ### Instalação
@@ -70,13 +71,16 @@ O projeto tem como objetivo aplicar conceitos de lógica de programação na con
 
 ```text
 DUNGEON-SCAPE-/
-├── main.py                 # Ponto de entrada: menus de login e menu principal
+├── main.py                 # Ponto de entrada: abre a janela inicial (ou o menu em texto)
+├── assets/                 # Imagens da janela inicial (fundo, botões e ícones)
 └── components/
     ├── config.py           # Constantes (arquivo de save, limite de salas...)
     ├── modelos.py          # Classes Inimigo e Item
     ├── estado.py           # Classe Estado (contas, logado, tick, inventário)
     ├── entrada.py          # Leitura e validação do que o jogador digita
-    ├── menus.py            # Textos e menus exibidos na tela
+    ├── menus.py            # Textos e menus exibidos na tela (menu em texto)
+    ├── tela_inicial.py     # Janela inicial (Tkinter): menu, login, registro e como jogar
+    ├── comoJogar.py        # Texto da tela "Como Jogar"
     ├── contas.py           # Cadastro, login e logout
     ├── persistencia.py     # Salvar e carregar o jogo (JSON)
     ├── inventario.py       # Regras do inventário
