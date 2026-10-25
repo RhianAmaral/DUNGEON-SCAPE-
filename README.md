@@ -2,11 +2,11 @@
 
 **Integrantes**
 
-* Mathues Lima Barbosa
-* Gustavo Chagas Neri
-* Rhian Amaral Dionisio da Silva
-* Romulo Batista Costa santos
+* Gustavo Chaves Neri Ferreira
+* Matheus Lima Barbosa
 * Richarlyson Vilar Dos Santos
+* Romulo Batista Costa santos
+* Rhian Amaral Dionisio da Silva
 
 
 
