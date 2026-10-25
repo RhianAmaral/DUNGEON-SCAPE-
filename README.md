@@ -2,11 +2,11 @@
 
 **Integrantes**
 
-* Gustavo Chaves Neri Ferreira
-* Matheus Lima Barbosa
-* Richarlyson Vilar Dos Santos
-* Romulo Batista Costa santos
+* Mathues Lima Barbosa
+* Gustavo Chagas Neri
 * Rhian Amaral Dionisio da Silva
+* Romulo Batista Costa santos
+* Richarlyson Vilar Dos Santos
 
 
 
@@ -65,6 +65,25 @@ O projeto tem como objetivo aplicar conceitos de lógica de programação na con
 
 > Dependendo da sua instalação, pode ser necessário utilizar `python3 main.py` ou `py main.py`.
 
+
+## Estrutura do projeto
+
+```text
+DUNGEON-SCAPE-/
+├── main.py                 # Ponto de entrada: menus de login e menu principal
+└── components/
+    ├── config.py           # Constantes (arquivo de save, limite de salas...)
+    ├── modelos.py          # Classes Inimigo e Item
+    ├── estado.py           # Classe Estado (contas, logado, tick, inventário)
+    ├── entrada.py          # Leitura e validação do que o jogador digita
+    ├── menus.py            # Textos e menus exibidos na tela
+    ├── contas.py           # Cadastro, login e logout
+    ├── persistencia.py     # Salvar e carregar o jogo (JSON)
+    ├── inventario.py       # Regras do inventário
+    ├── combate.py          # Lutar, fugir e usar item
+    ├── eventos.py          # Inimigos, loot, puzzles e evento aleatório
+    └── jogo.py             # Exploração de salas e fluxo da partida
+```
 
 A estrutura será atualizada conforme novos módulos e funcionalidades forem adicionados.
 
