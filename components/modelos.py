@@ -6,10 +6,26 @@ from dataclasses import dataclass
 @dataclass
 class Inimigo:
     """Representa um inimigo encontrado na masmorra."""
-    vida: int
+    vida: float
     ataque: float
     defesa: float = 0.0
     interacoes: tuple[str, ...] = ("lutar", "fugir", "usar item")
+
+    def atacar_player(self, jogador: Player) -> None:
+
+        jogador.vida -= self.ataque
+
+        
+@dataclass
+class Player:
+
+    vida: float
+    ataque: float
+    defesa: float
+
+    def atacar_inimigo(self, jogador: Player) -> None:
+
+        inimigo.vida -= self.ataque
 
 
 @dataclass
