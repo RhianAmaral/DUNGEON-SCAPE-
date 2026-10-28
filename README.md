@@ -102,7 +102,7 @@ Durante o desenvolvimento, serão explorados conceitos como:
 * Funções e modularização.
 * Tratamento de entradas e erros.
 * Classes e POO.
-* Json, leitura e escrita de arquivos.
+* Leitura e escrita de arquivos.
 
 
 ---
