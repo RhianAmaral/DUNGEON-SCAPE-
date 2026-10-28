@@ -6,7 +6,7 @@ from .combate import fugir, lutar, usar_item
 from .entrada import ler_opcao
 from .estado import Estado
 from .inventario import pegar_item
-from .modelos import Inimigo, Item
+from .modelos import Inimigo, Item, Player
 
 
 def spawnar_inimigo(dificuldade: int) -> Inimigo:
@@ -49,7 +49,7 @@ def _perguntar_interacao(interacoes: tuple[str, ...]) -> int:
     return ler_opcao("Escolha uma opção: ", 1, len(interacoes))
 
 
-def chamar_evento(estado: Estado) -> None:
+def chamar_evento(estado: Estado, jogador: Player) -> None:
     """Escolhe e executa um evento aleatório da masmorra."""
     estado.tick += 1
     dificuldade = estado.tick // 2
@@ -70,7 +70,7 @@ def chamar_evento(estado: Estado) -> None:
         escolha = _perguntar_interacao(resultado.interacoes)
 
         if escolha == 1:
-            lutar(estado, resultado)
+            lutar(estado, resultado, jogador)
         elif escolha == 2:
             fugir(estado, resultado)
         else:

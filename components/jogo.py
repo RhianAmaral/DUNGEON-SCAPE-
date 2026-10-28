@@ -20,6 +20,8 @@ from .entrada import ler_opcao
 # Importa a função que exibe o inventário do jogador.
 from .inventario import ver_inventario
 
+from .modelos import Player
+
 
 def escolher_porta() -> int:
     """Permite ao jogador escolher uma das três portas."""
@@ -34,7 +36,7 @@ def escolher_porta() -> int:
     return ler_opcao("Escolha uma porta: ", 1, 3)
 
 
-def explorar_sala(estado: Estado) -> None:
+def explorar_sala(estado: Estado, jogador: Player) -> None:
     """Explora uma quantidade aleatória de salas."""
 
     # Sorteia a quantidade de salas que serão exploradas nesta rodada.
@@ -49,7 +51,7 @@ def explorar_sala(estado: Estado) -> None:
         escolher_porta()
 
         # Executa um evento relacionado à exploração da sala.
-        chamar_evento(estado)
+        chamar_evento(estado, jogador)
 
         # Exibe uma animação simples para representar a exploração.
         print("Explorando salas.", end="\r", flush=True)
@@ -59,7 +61,7 @@ def explorar_sala(estado: Estado) -> None:
         print("Explorando salas...", flush=True)
 
 
-def iniciar_jogo(estado: Estado) -> None:
+def iniciar_jogo(estado: Estado, jogador: Player) -> None:
     """Inicia uma partida e permite explorar ou voltar ao menu."""
 
     # Impede que a partida comece se o jogador não estiver conectado.
@@ -85,7 +87,7 @@ def iniciar_jogo(estado: Estado) -> None:
 
         # Executa a ação correspondente à opção escolhida.
         if opcao == 1:
-            explorar_sala(estado)
+            explorar_sala(estado, jogador)
         elif opcao == 2:
             ver_inventario(estado)
         elif opcao == 3:

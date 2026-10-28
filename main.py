@@ -16,6 +16,7 @@ from components.menus import mostrar_menu_principal, mostrar_menu_signin
 # Importa as funções responsáveis por carregar e salvar o progresso.
 from components.persistencia import carregar_jogo, salvar_jogo
 
+from components.modelos import Player
 
 def lidar_com_signin_login(estado: Estado) -> bool:
     """Exibe o menu de cadastro e login até o jogador entrar ou sair.
@@ -102,7 +103,7 @@ def menu_em_texto(estado: Estado) -> None:
             return
 
 
-def abrir_janela_inicial(estado: Estado) -> bool:
+def abrir_janela_inicial(estado: Estado, jogador: Player) -> bool:
     """Abre a janela inicial e retorna True se ela for aberta com sucesso.
 
     Retorna False se não for possível abrir a janela, por exemplo,
@@ -113,7 +114,7 @@ def abrir_janela_inicial(estado: Estado) -> bool:
     try:
         from components.tela_inicial import JanelaInicial
 
-        janela = JanelaInicial(estado)
+        janela = JanelaInicial(estado, jogador)
     except Exception as erro:
         # Informa o motivo da falha e indica que será usado o terminal.
         print(f"Não foi possível abrir a janela inicial ({erro}).")
@@ -126,6 +127,9 @@ def abrir_janela_inicial(estado: Estado) -> bool:
 
 
 def main() -> None:
+
+    jogador = Player(vida=100, ataque=10, defesa=0)
+
     # Tenta carregar os dados salvos de uma execução anterior.
     estado = carregar_jogo()
 
@@ -134,7 +138,7 @@ def main() -> None:
         estado = Estado()
 
     # Tenta abrir a janela inicial; se falhar, utiliza os menus no terminal.
-    if not abrir_janela_inicial(estado):
+    if not abrir_janela_inicial(estado, jogador):
         menu_em_texto(estado)
 
 

@@ -13,7 +13,7 @@ class Inimigo:
 
     def atacar_player(self, jogador: Player) -> None:
 
-        jogador.vida -= self.ataque
+        jogador.vida = int(jogador.vida - self.ataque)
 
         
 @dataclass
@@ -23,9 +23,9 @@ class Player:
     ataque: float
     defesa: float
 
-    def atacar_inimigo(self, jogador: Player) -> None:
+    def atacar_inimigo(self, inimigo: Inimigo) -> None:
 
-        inimigo.vida -= self.ataque
+        inimigo.vida = int(inimigo.vida - self.ataque)
 
 
 @dataclass
