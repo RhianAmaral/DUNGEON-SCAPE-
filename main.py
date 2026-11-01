@@ -128,7 +128,7 @@ def abrir_janela_inicial(estado: Estado, jogador: Player) -> bool:
 
 def main() -> None:
 
-    jogador = Player(vida=100, ataque=10, defesa=0)
+    jogador = Player(vida=10, ataque=10, defesa=0)
 
     # Tenta carregar os dados salvos de uma execução anterior.
     estado = carregar_jogo()

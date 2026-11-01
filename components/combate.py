@@ -42,12 +42,18 @@ def lutar(estado: Estado, inimigo: Inimigo, jogador: Player) -> None:
 
         escolha = _perguntar_interacao(inimigo.interacoes)
 
-        if escolha == 1:
-            continue
-        elif escolha == 2:
-            fugir(estado, inimigo)
-        else:
-            usar_item(estado, inimigo)
+        while True:
+
+            if escolha == 1:
+                break
+            elif escolha == 2:
+                fugir(estado, inimigo)
+                break
+            elif escolha == 3:
+                usar_item(estado, inimigo)
+                break
+            else:
+                continue
     
 
 
