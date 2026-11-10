@@ -20,18 +20,23 @@ def spawnar_inimigo(dificuldade: int) -> Inimigo:
 
 
 def gerar_loot(dificuldade: int) -> Item:
-    """Gera uma arma ou uma armadura de acordo com a dificuldade."""
-    tipo = random.choice(("armadura", "arma"))
+    """Gera uma arma, uma armadura ou um item de cura."""
+    tipo = random.choice(("armadura", "arma", "cura"))
+
+    ataque = 0
+    defesa = 0
+    cura = 0
 
     if tipo == "armadura":
-        ataque = 0
         defesa = 3 + dificuldade
-    else:
+    elif tipo == "arma":
         ataque = (3 + dificuldade) * 1.5
-        defesa = 0
+    elif tipo == "cura":
+        cura = 50
 
     print("Você encontrou um item!")
-    return Item(tipo=tipo, atk=ataque, dfs=defesa)
+    return Item(tipo=tipo, atk=ataque, dfs=defesa, cura=cura)
+
 
 
 def gerar_puzzle(dificuldade: int) -> None:

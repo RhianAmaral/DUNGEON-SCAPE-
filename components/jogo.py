@@ -51,7 +51,10 @@ def explorar_sala(estado: Estado, jogador: Player) -> None:
         escolher_porta()
 
         # Executa um evento relacionado à exploração da sala.
-        chamar_evento(estado, jogador)
+        if not chamar_evento(estado, jogador):
+            print("Sua partida foi encerrada.")
+            estado.reiniciar_partida(jogador)
+            return
 
         # Exibe uma animação simples para representar a exploração.
         print("Explorando salas.", end="\r", flush=True)
@@ -70,7 +73,7 @@ def iniciar_jogo(estado: Estado, jogador: Player) -> None:
         return
 
     # Reinicia o progresso e os atributos da partida.
-    estado.reiniciar_partida()
+    estado.reiniciar_partida(jogador)
 
     # Apresenta a situação inicial da história.
     print("Você acordou em uma masmorra.")

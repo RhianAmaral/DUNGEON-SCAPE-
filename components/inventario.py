@@ -24,6 +24,11 @@ def pegar_item(estado: Estado, item: Item) -> None:
 def descartar_item(estado):
     """Permite descartar um item do inventário."""
 
+    # Verifica se o inventário está vazio.
+    if not estado.inventario:
+        print("Seu inventário está vazio!")
+        return
+
     # Percorre os itens e exibe seus números e atributos.
     for numero, item in enumerate(estado.inventario, start=1):
         print(f"[{numero}] Tipo:", item.tipo)
@@ -33,14 +38,16 @@ def descartar_item(estado):
 
     # Solicita o número do item que o jogador deseja descartar.
     opcao = ler_opcao(
-        "Qual item deseja descartar? ",1,len(estado.inventario) )
+        "Qual item deseja descartar? ", 1, len(estado.inventario)
+    )
 
     # Remove o item escolhido da lista do inventário.
-    item = estado.inventario.pop(opcao - 1)
+    item_descartado = estado.inventario.pop(opcao - 1)
 
     # Informa ao jogador qual item foi descartado.
-    print(f"Você descartou: {item.tipo}")
+    print(f"Você descartou: {item_descartado.tipo}")
 
+    
 
 def ver_inventario(estado: Estado) -> None:
     """Exibe o inventário e suas opções."""

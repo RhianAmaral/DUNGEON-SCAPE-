@@ -1,11 +1,10 @@
-
 """Estado compartilhado do jogo (substitui as variáveis globais)."""
 
 # Importa os recursos necessários para criar uma classe de dados.
 from dataclasses import dataclass, field
 
-# Importa a classe Item, utilizada para representar os itens do jogo.
-from .modelos import Item
+# Importa as classes Item e Player.
+from .modelos import Item, Player
 
 
 @dataclass
@@ -45,8 +44,8 @@ class Estado:
     arma_equipada: Item | None = None
     armadura_equipada: Item | None = None
 
-    def reiniciar_partida(self) -> None:
-        """Reinicia o progresso e os atributos do jogador para uma nova partida."""
+    def reiniciar_partida(self, jogador: Player) -> None:
+        """Reinicia o progresso e os atributos do jogador."""
 
         # Zera o contador de eventos.
         self.tick = 0
@@ -70,3 +69,8 @@ class Estado:
         # Remove os equipamentos atualmente utilizados.
         self.arma_equipada = None
         self.armadura_equipada = None
+
+        # Restaura os atributos do jogador.
+        jogador.vida = self.vida_maxima
+        jogador.ataque = self.ataque_base
+        jogador.defesa = self.defesa_base

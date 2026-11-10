@@ -1,5 +1,6 @@
 """Classes que representam as entidades do jogo."""
 
+from __future__ import annotations
 from dataclasses import dataclass
 
 
@@ -34,4 +35,5 @@ class Item:
     tipo: str
     atk: float
     dfs: float
+    cura: float
     interacoes: tuple[str, ...] = ("pegar", "descartar")
