@@ -6,7 +6,7 @@ from .combate import fugir, lutar, usar_item
 from .entrada import ler_opcao
 from .estado import Estado
 from .inventario import pegar_item
-from .modelos import Inimigo, Item
+from .modelos import Inimigo, Item, Player
 
 
 def spawnar_inimigo(dificuldade: int) -> Inimigo:
@@ -20,18 +20,23 @@ def spawnar_inimigo(dificuldade: int) -> Inimigo:
 
 
 def gerar_loot(dificuldade: int) -> Item:
-    """Gera uma arma ou uma armadura de acordo com a dificuldade."""
-    tipo = random.choice(("armadura", "arma"))
+    """Gera uma arma, uma armadura ou um item de cura."""
+    tipo = random.choice(("armadura", "arma", "cura"))
+
+    ataque = 0
+    defesa = 0
+    cura = 0
 
     if tipo == "armadura":
-        ataque = 0
         defesa = 3 + dificuldade
-    else:
+    elif tipo == "arma":
         ataque = (3 + dificuldade) * 1.5
-        defesa = 0
+    elif tipo == "cura":
+        cura = 50
 
     print("Você encontrou um item!")
-    return Item(tipo=tipo, atk=ataque, dfs=defesa)
+    return Item(tipo=tipo, atk=ataque, dfs=defesa, cura=cura)
+
 
 
 def gerar_puzzle(dificuldade: int) -> None:
@@ -49,8 +54,11 @@ def _perguntar_interacao(interacoes: tuple[str, ...]) -> int:
     return ler_opcao("Escolha uma opção: ", 1, len(interacoes))
 
 
-def chamar_evento(estado: Estado) -> None:
-    """Escolhe e executa um evento aleatório da masmorra."""
+def chamar_evento(estado: Estado, jogador: Player) -> bool:
+    """Escolhe e executa um evento aleatório da masmorra.
+
+    Retorna False se o jogador morreu (a partida acaba) e True caso contrário.
+    """
     estado.tick += 1
     dificuldade = estado.tick // 2
 
@@ -70,8 +78,10 @@ def chamar_evento(estado: Estado) -> None:
         escolha = _perguntar_interacao(resultado.interacoes)
 
         if escolha == 1:
-            lutar(estado, resultado)
+            return lutar(estado, resultado, jogador)
         elif escolha == 2:
             fugir(estado, resultado)
         else:
-            usar_item(estado, resultado)
+            usar_item(estado, resultado, jogador)
+
+    return True

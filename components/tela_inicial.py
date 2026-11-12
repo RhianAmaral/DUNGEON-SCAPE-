@@ -18,6 +18,7 @@ from .contas import autenticar, criar_conta, logout
 from .estado import Estado
 from .jogo import iniciar_jogo
 from .persistencia import salvar_jogo
+from .modelos import Player
 
 PASTA_ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
@@ -78,9 +79,11 @@ def _ativar_dpi_alto() -> None:
 class JanelaInicial:
     """Menu inicial: Iniciar Jogo, Login, Registrar-se, Como Jogar e Sair."""
 
-    def __init__(self, estado: Estado) -> None:
+    # construtor (lima y)
+    def __init__(self, estado: Estado, jogador: Player):
         self.estado = estado
 
+        self.jogador = jogador
         _ativar_dpi_alto()
         self.root = tk.Tk()
         self.root.title("Dungeon Escape")
@@ -111,7 +114,7 @@ class JanelaInicial:
         )
 
         self.botoes = [
-            {"icone": "play", "rotulo": lambda: "Iniciar Jogo", "acao": self.iniciar},
+            {"icone": "play", "rotulo": lambda: "Iniciar Jogo", "acao": self.iniciar_jogo_atual},
             {
                 "icone": "user",
                 "rotulo": lambda: "Logout" if self.estado.logado else "Login",
@@ -157,6 +160,15 @@ class JanelaInicial:
         self.largura = escolhida
         self.altura = round(ALTURA_REF * escolhida / LARGURA_REF)
         self.escala = escolhida / LARGURA_REF
+
+    def iniciar_jogo_atual(self) -> None:
+    
+        if not self.estado.logado:
+            self.mensagem("Dungeon Escape", "Realize o login para iniciar o jogo.")
+            return
+
+        self.iniciar(self.jogador)
+
 
     def px(self, valor: float) -> int:
         """Converte uma medida da imagem original para a escala atual."""
@@ -310,16 +322,16 @@ class JanelaInicial:
         self._atualizar_status()
 
     # ----------------------------------------------------------------- ações
-    def iniciar(self) -> None:
+    def iniciar(self, jogador: Player) -> None:
         if not self.estado.logado:
             self.mensagem("Dungeon Escape", "Realize o login para iniciar o jogo.")
             return
-
+            
         # A partida roda no terminal; a janela some enquanto o jogo roda.
         self.root.withdraw()
         print("\n[Dungeon Escape] A aventura continua aqui no terminal.")
         try:
-            iniciar_jogo(self.estado)
+            iniciar_jogo(self.estado, jogador)
         except (KeyboardInterrupt, EOFError):
             print("\nPartida interrompida.")
         finally:
@@ -327,7 +339,7 @@ class JanelaInicial:
             self.root.deiconify()
             self.root.lift()
             self.root.focus_force()
-
+#-------------------------------
     def alternar_login(self) -> None:
         if self.estado.logado:
             logout(self.estado)
@@ -342,6 +354,7 @@ class JanelaInicial:
 
         if self.formulario("Login", ["Usuário", "Senha"], "Entrar", validar):
             self._atualizar_interface()
+#-------------------------------
 
     def registrar(self) -> None:
         def validar(valores: dict[str, str]) -> str | None:
