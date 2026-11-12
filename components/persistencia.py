@@ -11,9 +11,10 @@ def salvar_jogo(estado: Estado) -> None:
     """Salva o tick atual, o inventário e as contas no arquivo de save."""
     # Item é uma classe, então precisa virar dicionário para ir pro JSON.
     inventario = [
-        {"tipo": item.tipo, "atk": item.atk, "dfs": item.dfs}
+        {"tipo": item.tipo, "atk": item.atk, "dfs": item.dfs, "cura": item.cura}
         for item in estado.inventario
     ]
+
     dados = [estado.tick, inventario, estado.contas]
 
     with open(ARQUIVO_SAVE, "w", encoding="utf-8") as arquivo:
@@ -31,9 +32,17 @@ def carregar_jogo() -> Estado | None:
             return None
 
         tick, inventario, contas = dados
-        itens = [Item(**item) for item in inventario]
+        itens = [
+            Item(
+                tipo=item["tipo"],
+                atk=item.get("atk", 0),
+                dfs=item.get("dfs", 0),
+                cura=item.get("cura", 0),  # saves antigos não têm "cura"
+            )
+            for item in inventario
+        ]
         return Estado(contas=contas, tick=tick, inventario=itens)
 
-    except (FileNotFoundError, json.JSONDecodeError, TypeError):
+    except (FileNotFoundError, json.JSONDecodeError, TypeError, KeyError):
         # Sem save, JSON inválido ou itens com formato inesperado.
         return None

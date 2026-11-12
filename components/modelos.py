@@ -25,9 +25,11 @@ class Player:
     defesa: float
 
     def atacar_inimigo(self, inimigo: Inimigo) -> None:
+        # O dano é o ataque do jogador menos a defesa do inimigo.
+        # Sempre causa pelo menos 1 de dano, para a luta sempre terminar.
 
-        inimigo.vida = int(inimigo.vida - self.ataque)
-
+        dano = max(1, self.ataque - inimigo.defesa)
+        inimigo.vida = int(inimigo.vida - dano)
 
 @dataclass
 class Item:

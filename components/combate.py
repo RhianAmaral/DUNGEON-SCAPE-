@@ -1,6 +1,7 @@
 """Ações de combate contra inimigos."""
 
 from .estado import Estado
+from .entrada import ler_opcao
 from .modelos import Inimigo, Player
 from time import sleep
 import random
@@ -45,7 +46,7 @@ def lutar(estado: Estado, inimigo: Inimigo, jogador: Player) -> bool:
                 else:
                     break
             elif escolha == 3:
-                usar_item(estado, inimigo)
+                usar_item(estado, inimigo, jogador)
                 break
 
 
@@ -62,37 +63,34 @@ def fugir(estado: Estado, inimigo: Inimigo) -> bool:
     return False
 
 
-def usar_item(estado: Estado, inimigo: Inimigo) -> None:
-            """Executa o uso de itens em combate."""
-        
-            jogador = estado.jogador
-        
-            if estado.inventario:
-                for indice, item in enumerate(estado.inventario):
-                    print(f"{indice + 1} - {item.tipo}")
-        
-                opcao = ler_opcao("Qual item deseja usar? ", 1, len(estado.inventario))
-        
-                indice = opcao - 1
-                item = estado.inventario[indice]
-        
-                if item.cura > 0:
-                    if jogador.vida < jogador.vida_maxima:
-                        vida_anterior = jogador.vida
-        
-                        jogador.vida = min(jogador.vida + item.cura, jogador.vida_maxima)
-                        
-                        estado.inventario.pop(indice)
-        
-                        print(f"Você recuperou {jogador.vida - vida_anterior} pontos de vida!")
-                    else:
-                        print("Sua vida está cheia!")
-                else:
-                    print("Esse item não é uma poção de cura!")
-        
-            else:
-                print("Você não tem itens no inventário.")
-        
+def usar_item(estado: Estado, inimigo: Inimigo, jogador: Player) -> None:
+    """Executa o uso de itens em combate."""
+
+    if not estado.inventario:
+        print("Você não tem itens no inventário.")
+        return
+
+    for indice, item in enumerate(estado.inventario):
+        print(f"{indice + 1} - {item.tipo}")
+
+    opcao = ler_opcao("Qual item deseja usar? ", 1, len(estado.inventario))
+    indice = opcao - 1
+    item = estado.inventario[indice]
+
+    if item.cura <= 0:
+        print("Esse item não é uma poção de cura!")
+        return
+
+    if jogador.vida >= estado.vida_maxima:
+        print("Sua vida está cheia!")
+        return
+
+    vida_anterior = jogador.vida
+    jogador.vida = min(jogador.vida + item.cura, estado.vida_maxima)
+    estado.inventario.pop(indice)
+
+    print(f"Você recuperou {jogador.vida - vida_anterior} pontos de vida!")
+
 
 def morte() -> None:
     """Exibe a mensagem de morte do jogador."""

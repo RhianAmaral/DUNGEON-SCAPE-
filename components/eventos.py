@@ -54,8 +54,11 @@ def _perguntar_interacao(interacoes: tuple[str, ...]) -> int:
     return ler_opcao("Escolha uma opção: ", 1, len(interacoes))
 
 
-def chamar_evento(estado: Estado, jogador: Player) -> None:
-    """Escolhe e executa um evento aleatório da masmorra."""
+def chamar_evento(estado: Estado, jogador: Player) -> bool:
+    """Escolhe e executa um evento aleatório da masmorra.
+
+    Retorna False se o jogador morreu (a partida acaba) e True caso contrário.
+    """
     estado.tick += 1
     dificuldade = estado.tick // 2
 
@@ -75,8 +78,10 @@ def chamar_evento(estado: Estado, jogador: Player) -> None:
         escolha = _perguntar_interacao(resultado.interacoes)
 
         if escolha == 1:
-            lutar(estado, resultado, jogador)
+            return lutar(estado, resultado, jogador)
         elif escolha == 2:
             fugir(estado, resultado)
         else:
-            usar_item(estado, resultado)
+            usar_item(estado, resultado, jogador)
+
+    return True

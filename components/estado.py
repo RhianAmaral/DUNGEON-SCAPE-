@@ -44,33 +44,23 @@ class Estado:
     arma_equipada: Item | None = None
     armadura_equipada: Item | None = None
 
-    def reiniciar_partida(self, jogador: Player) -> None:
-        """Reinicia o progresso e os atributos do jogador."""
+    def reiniciar_partida(self, jogador: Player | None = None) -> None:
+        """Reinicia o progresso e os atributos do jogador.
 
-        # Zera o contador de eventos.
+        ``jogador`` é opcional: sem ele (ex.: no logout), só o estado é zerado.
+        """
+
         self.tick = 0
-
-        # Remove todos os itens do inventário.
         self.inventario.clear()
-
-        # Retorna o jogador à primeira sala.
         self.sala_atual = 1
-
-        # Restaura a vida máxima do jogador.
         self.vida = self.vida_maxima
-
-        # Restaura os atributos básicos de combate.
         self.ataque_base = 10
         self.defesa_base = 0
-
-        # Zera a quantidade de moedas.
         self.moedas = 0
-
-        # Remove os equipamentos atualmente utilizados.
         self.arma_equipada = None
         self.armadura_equipada = None
 
-        # Restaura os atributos do jogador.
-        jogador.vida = self.vida_maxima
-        jogador.ataque = self.ataque_base
-        jogador.defesa = self.defesa_base
+        if jogador is not None:
+            jogador.vida = self.vida_maxima
+            jogador.ataque = self.ataque_base
+            jogador.defesa = self.defesa_base
