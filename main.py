@@ -1,7 +1,7 @@
 """Ponto de entrada do jogo Escape da Masmorra."""
 
 # Importa as funções responsáveis pelo cadastro, login e logout.
-from components.contas import cadastro, login, logout
+from components.contas import cadastro, login, logout, recuperar_senha
 
 # Importa a classe que armazena o estado atual do jogo.
 from components.estado import Estado
@@ -35,6 +35,8 @@ def lidar_com_signin_login(estado: Estado) -> bool:
         elif opcao == 2:
             login(estado)
         elif opcao == 3:
+            recuperar_senha(estado)
+        elif opcao == 4:
             print("Salvando e saindo do jogo...")
             salvar_jogo(estado)
             return False

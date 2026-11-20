@@ -3,7 +3,12 @@
 from time import sleep
 
 from .estado import Estado
-from .menus import mostrar_titulo_cadastro, mostrar_titulo_login
+from .menus import (
+    mostrar_titulo_cadastro,
+    mostrar_titulo_login,
+    mostrar_titulo_recuperacao,
+)
+from .persistencia import salvar_jogo
 
 
 def criar_conta(estado: Estado, usuario: str, senha: str) -> bool:
@@ -25,6 +30,41 @@ def autenticar(estado: Estado, usuario: str, senha: str) -> bool:
     estado.logado = False
     estado.usuario = ""
     return False
+
+
+def redefinir_senha(
+    estado: Estado, usuario: str, nova_senha: str, confirmacao: str
+) -> str | None:
+    """Troca a senha de um usuário existente.
+    Retorna None se deu certo, ou a mensagem de erro caso contrário.
+    """
+    if usuario not in estado.contas:
+        return "Usuário não encontrado."
+    if not nova_senha:
+        return "Informe a nova senha."
+    if nova_senha != confirmacao:
+        return "As senhas não conferem."
+
+    estado.contas[usuario] = nova_senha
+    return None
+
+
+def recuperar_senha(estado: Estado) -> None:
+    """Recuperação de senha no menu em texto."""
+    mostrar_titulo_recuperacao()
+
+    usuario = input("Digite seu nome de usuário: ")
+    nova_senha = input("Digite a nova senha: ")
+    confirmacao = input("Confirme a nova senha: ")
+
+    erro = redefinir_senha(estado, usuario, nova_senha, confirmacao)
+    if erro:
+        print(erro)
+        return
+
+    salvar_jogo(estado)
+    print("Senha alterada com sucesso!")
+    sleep(1)
 
 
 def cadastro(estado: Estado) -> None:

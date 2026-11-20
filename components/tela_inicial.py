@@ -1,9 +1,7 @@
 """Janela inicial do jogo (menu principal com visual medieval).
-
 A janela usa apenas o tkinter, que já vem com o Python. As imagens ficam na
 pasta ``assets`` e existem em três tamanhos; o tamanho é escolhido de acordo
 com a altura da tela do jogador.
-
 Os botões são desenhados por cima da imagem de fundo, então dá para mudar
 os textos e as ações sem mexer nas imagens.
 """
@@ -14,7 +12,7 @@ from pathlib import Path
 from tkinter import font as tkfont
 
 from .comoJogar import TEXTO_COMO_JOGAR, TITULO_COMO_JOGAR
-from .contas import autenticar, criar_conta, logout
+from .contas import autenticar, criar_conta, logout, redefinir_senha
 from .estado import Estado
 from .jogo import iniciar_jogo
 from .persistencia import salvar_jogo
@@ -162,7 +160,7 @@ class JanelaInicial:
         self.escala = escolhida / LARGURA_REF
 
     def iniciar_jogo_atual(self) -> None:
-    
+
         if not self.estado.logado:
             self.mensagem("Dungeon Escape", "Realize o login para iniciar o jogo.")
             return
@@ -326,7 +324,7 @@ class JanelaInicial:
         if not self.estado.logado:
             self.mensagem("Dungeon Escape", "Realize o login para iniciar o jogo.")
             return
-            
+
         # A partida roda no terminal; a janela some enquanto o jogo roda.
         self.root.withdraw()
         print("\n[Dungeon Escape] A aventura continua aqui no terminal.")
@@ -352,9 +350,33 @@ class JanelaInicial:
                 return "Usuário ou senha incorretos!"
             return None
 
-        if self.formulario("Login", ["Usuário", "Senha"], "Entrar", validar):
+        if self.formulario(
+            "Login",
+            ["Usuário", "Senha"],
+            "Entrar",
+            validar,
+            link=("Esqueci minha senha", self.recuperar_senha),
+        ):
             self._atualizar_interface()
 #-------------------------------
+
+    def recuperar_senha(self) -> None:
+        def validar(valores: dict[str, str]) -> str | None:
+            usuario = valores["Usuário"].strip()
+            return redefinir_senha(
+                self.estado,
+                usuario,
+                valores["Nova senha"],
+                valores["Confirmar senha"],
+            )
+
+        campos = ["Usuário", "Nova senha", "Confirmar senha"]
+        if self.formulario("Recuperar Senha", campos, "Salvar", validar):
+            salvar_jogo(self.estado)
+            self.mensagem(
+                "Recuperar Senha",
+                "Senha alterada com sucesso!\nAgora faça o login para jogar.",
+            )
 
     def registrar(self) -> None:
         def validar(valores: dict[str, str]) -> str | None:
@@ -455,9 +477,10 @@ class JanelaInicial:
         top.bind("<Escape>", lambda _e: top.destroy())
         self._exibir_dialogo(top)
 
-    def formulario(self, titulo, campos, rotulo_ok, validar) -> dict[str, str] | None:
+    def formulario(
+        self, titulo, campos, rotulo_ok, validar, link=None
+    ) -> dict[str, str] | None:
         """Mostra campos de texto e só fecha quando ``validar`` aprova.
-
         ``validar`` recebe os valores digitados e devolve uma mensagem de erro
         (ou None se estiver tudo certo). Retorna os valores ou None se o
         jogador cancelar.
@@ -478,7 +501,7 @@ class JanelaInicial:
                 moldura,
                 width=24,
                 font=self.fonte_campo,
-                show="•" if nome == "Senha" else "",
+                show="•" if "senha" in nome.lower() else "",
                 bg=COR_CAMPO,
                 fg=COR_TEXTO_SEL,
                 insertbackground=COR_TEXTO_SEL,
@@ -490,6 +513,23 @@ class JanelaInicial:
             )
             entrada.pack(fill="x", ipady=5)
             entradas[nome] = entrada
+
+        if link:
+            rotulo_link = tk.Label(
+                moldura,
+                text=link[0],
+                font=self.fonte_texto,
+                fg=COR_OURO,
+                bg=COR_FUNDO,
+                cursor="hand2",
+            )
+            rotulo_link.pack(anchor="e", pady=(8, 0))
+
+            def abrir_link(_evento=None) -> None:
+                top.destroy()
+                self.root.after(10, link[1])
+
+            rotulo_link.bind("<Button-1>", abrir_link)
 
         erro = tk.Label(
             moldura,

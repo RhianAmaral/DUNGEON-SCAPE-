@@ -1,11 +1,10 @@
 """Ações de combate contra inimigos."""
 
-from time import sleep
-import random
-
 from .estado import Estado
 from .entrada import ler_opcao
 from .modelos import Inimigo, Player
+from time import sleep
+import random
 
 
 def lutar(estado: Estado, inimigo: Inimigo, jogador: Player) -> bool:
@@ -28,9 +27,6 @@ def lutar(estado: Estado, inimigo: Inimigo, jogador: Player) -> bool:
 
         inimigo.atacar_player(jogador)
 
-        # Mantém a vida do estado sincronizada com a do jogador.
-        estado.vida = jogador.vida
-
         print("O inimigo te atacou!")
         print(f"Vida do inimigo: {inimigo.vida}")
         print(f"Sua vida: {jogador.vida}")
@@ -44,16 +40,13 @@ def lutar(estado: Estado, inimigo: Inimigo, jogador: Player) -> bool:
 
             if escolha == 1:
                 break
-
             elif escolha == 2:
                 if fugir(estado, inimigo):
                     return True
                 else:
                     break
-
             elif escolha == 3:
                 usar_item(estado, inimigo, jogador)
-                estado.vida = jogador.vida
                 break
 
 
@@ -94,10 +87,6 @@ def usar_item(estado: Estado, inimigo: Inimigo, jogador: Player) -> None:
 
     vida_anterior = jogador.vida
     jogador.vida = min(jogador.vida + item.cura, estado.vida_maxima)
-
-    # Atualiza a vida compartilhada do jogo.
-    estado.vida = jogador.vida
-
     estado.inventario.pop(indice)
 
     print(f"Você recuperou {jogador.vida - vida_anterior} pontos de vida!")

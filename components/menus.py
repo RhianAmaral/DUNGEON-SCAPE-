@@ -15,7 +15,8 @@ def mostrar_menu_signin() -> None:
     _cabecalho("Escape da Masmorra")
     print("1 - Cadastro")
     print("2 - Login")
-    print("3 - Sair")
+    print("3 - Esqueci minha senha")
+    print("4 - Sair")
 
 
 def mostrar_menu_principal() -> None:
@@ -34,6 +35,11 @@ def mostrar_titulo_cadastro() -> None:
 def mostrar_titulo_login() -> None:
     """Exibe o cabeçalho da tela de login."""
     _cabecalho("LOGIN")
+
+
+def mostrar_titulo_recuperacao() -> None:
+    """Exibe o cabeçalho da tela de recuperação de senha."""
+    _cabecalho("RECUPERAR SENHA")
 
 
 def instrucoes() -> None:
